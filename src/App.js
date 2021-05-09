@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { Route, Switch} from 'react-router-dom';
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+
 
 import Header from './components/header/header.component'; 
 import Homepage from './pages/homepage/homepage.component';
@@ -17,7 +18,7 @@ class App extends React.Component {
     super();
     
     this.state = {
-      currentUser : null
+       
     }
 
   }
@@ -25,10 +26,20 @@ class App extends React.Component {
   unsubscribeFromAuth = null; 
   
   componentDidMount() {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({ currentUser : user})
-    });
-  }
+
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if(!userAuth) {
+        this.setState({ currentUser : null});
+      } else {
+        const userReferenceObj = await createUserProfileDocument(userAuth);
+          userReferenceObj.onSnapshot(snapshot => {
+              const data = snapshot.data();  
+              this.setState({ 
+                currentUser: { ...data }
+              }); 
+          })
+      }});
+    }   
   
   componentWillUnmount = () => this.unsubscribeFromAuth();
 
