@@ -36,8 +36,7 @@ class App extends React.Component {
               const data = snapshot.data();  
               this.setState({ 
                 currentUser: { ...data }
-              }); 
-              console.log(this.state); 
+              });
           }); 
           
         }});
