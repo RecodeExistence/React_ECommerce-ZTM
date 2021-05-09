@@ -29,7 +29,7 @@ const config = {
           accountCreationDate, 
           ...otherData
         });
-        console.log(`User ${displayName} added to database.`) 
+
       } catch(err) {
         console.log(`Something went wrong, error creating user. 
                     ${err.message}`
